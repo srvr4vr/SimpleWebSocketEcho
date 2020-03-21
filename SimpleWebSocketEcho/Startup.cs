@@ -91,7 +91,6 @@ namespace SimpleWebSocketEcho
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
             }
             finally
             {
