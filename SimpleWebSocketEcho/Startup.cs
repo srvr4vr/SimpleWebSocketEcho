@@ -73,12 +73,18 @@ namespace SimpleWebSocketEcho
             
             var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             var message = Encoding.UTF8.GetString(buffer).Split('\0')[0];
+            buffer = Encoding.UTF8.GetBytes(message);
+            
             try
             {
                 while (!result.CloseStatus.HasValue)
                 {
-                    buffer = Encoding.UTF8.GetBytes(message);
                     await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, buffer.Length), WebSocketMessageType.Text, true, CancellationToken.None);
+                    
+                    message = Encoding.UTF8.GetString(buffer).Split('\0')[0];
+                  
+                    Console.WriteLine($"Send: {message}");
+                    buffer = Encoding.UTF8.GetBytes(message);
                     result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 }
             }
